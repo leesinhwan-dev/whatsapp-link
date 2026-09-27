@@ -164,39 +164,9 @@ async function sendDailyReport(env, hours = 24) {
 }
 
 export default {
-  // Cron Trigger handler
+  // Purely private Cron Trigger handler
+  // Only Cloudflare's internal scheduler can invoke this; it cannot be called over the public web
   async scheduled(event, env, ctx) {
     ctx.waitUntil(sendDailyReport(env, 24));
-  },
-
-  // HTTP Handler for manual on-demand testing via browser or curl
-  async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-
-    // Endpoint to manually trigger a report and verify Discord webhook
-    if (url.pathname === "/test-report" || url.pathname === "/send-now") {
-      const secret = url.searchParams.get("key");
-      // Optional security key check if defined
-      if (env.ADMIN_KEY && secret !== env.ADMIN_KEY) {
-        return new Response("Unauthorized: invalid key", { status: 401 });
-      }
-
-      try {
-        const result = await sendDailyReport(env, 24);
-        return new Response(JSON.stringify(result, null, 2), {
-          headers: { "Content-Type": "application/json" }
-        });
-      } catch (err) {
-        return new Response(JSON.stringify({ error: err.message }, null, 2), {
-          status: 500,
-          headers: { "Content-Type": "application/json" }
-        });
-      }
-    }
-
-    return new Response(
-      "WhatsApp Link Analytics Cron Worker is active.\nUse /test-report?key=... to trigger a test notification.",
-      { headers: { "Content-Type": "text/plain" } }
-    );
   }
 };

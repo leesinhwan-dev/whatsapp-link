@@ -230,14 +230,8 @@ Inside the [`cron-reporter/`](file:///Users/leesinhwan/Development/whatsapp-link
    npx wrangler deploy
    ```
 
-3. **Verify Immediately:**
-   Once deployed, test sending a notification on demand by opening in your browser:
-   `https://wa-link-cron-reporter.dev-leesinhwan.workers.dev/test-report`
-   
-   Check your Discord channel — you should instantly see your rich analytics card!
-
-4. **Schedule:**
-   The worker automatically executes every day at **16:00 UTC** (**00:00 midnight UTC+8 / Malaysia Time**) and posts the 24-hour summary.
+3. **Automated & Private Execution:**
+   The worker has no public web route (`workers_dev = false`) and contains no HTTP endpoint. It runs **purely internally** on Cloudflare's edge schedule every day at **16:00 UTC** (**00:00 midnight UTC+8 / Malaysia Time**) and posts the 24-hour summary directly to your Discord channel.
 
 ---
 

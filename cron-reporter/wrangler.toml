@@ -1,6 +1,7 @@
 name = "wa-link-cron-reporter"
 main = "index.js"
 compatibility_date = "2024-01-01"
+workers_dev = false
 
 # Daily cron trigger: runs at 16:00 UTC (12:00 AM midnight MYT / UTC+8)
 [triggers]
