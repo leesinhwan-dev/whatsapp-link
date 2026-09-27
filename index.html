@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Direct Link & QR Generator | wa.me Chat Link</title>
+  <meta name="description" content="Instant WhatsApp direct chat link and QR code generator with auto country detection and username support. 免加联络人直接生成 WhatsApp 聊天直链与二维码。" />
+  <meta name="keywords" content="WhatsApp link generator, wa.me generator, WhatsApp QR code, whatsapp direct chat, whatsapp chat link without saving number, WhatsApp链接生成器, 免加联络人, WhatsApp扫码聊天, wa.me 链接, 马来西亚 whatsapp 链接" />
+  <meta name="author" content="wa.me Tools" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://wa.me" />
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#e3f8ec" id="themeColorMeta" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="WhatsApp Direct Link & QR Generator | 免存号码直接聊天链接" />
+  <meta property="og:description" content="Instant WhatsApp direct chat link and QR code generator with auto country detection. 智能识别国家代码，一键生成 WhatsApp 对话链接与二维码。" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_CN" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="WhatsApp Direct Link & QR Generator" />
+  <meta name="twitter:description" content="Instant WhatsApp direct chat link and QR code generator with auto country detection and username support." />
+
+  <!-- Structured Data (JSON-LD) for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "WhatsApp Direct Link & QR Generator",
+    "alternateName": ["WhatsApp链接生成器", "wa.me 链接生成器", "WhatsApp Direct Chat Link"],
+    "description": "Instant WhatsApp direct chat link and QR code generator with auto country detection and pre-filled message support.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "inLanguage": ["en", "zh"],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- QRCode Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      /* Light Theme (Default) */
+      --bg-gradient: radial-gradient(circle at 50% 0%, #e3f8ec 0%, #edf9f2 35%, #f8fafc 85%);
+      --ambient-glow: radial-gradient(circle, rgba(37, 211, 102, 0.22) 0%, rgba(18, 140, 126, 0.08) 50%, rgba(255, 255, 255, 0) 70%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(37, 211, 102, 0.25);
+      --card-border-hover: rgba(37, 211, 102, 0.5);
+      --card-shadow: 0 20px 45px -15px rgba(18, 140, 126, 0.12), 0 4px 15px -3px rgba(0, 0, 0, 0.04);
+      
+      --primary: #25d366;
+      --primary-hover: #1ebd5a;
+      --primary-glow: rgba(37, 211, 102, 0.28);
+      --primary-subtle: rgba(37, 211, 102, 0.12);
+      --accent: #128c7e;
+
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --input-focus: #128c7e;
+      --input-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --input-focus-shadow: 0 0 0 3px rgba(37, 211, 102, 0.22), 0 1px 3px rgba(0, 0, 0, 0.04);
+
+      --badge-bg: rgba(37, 211, 102, 0.15);
+      --badge-text: #0d6e38;
+      --badge-border: rgba(37, 211, 102, 0.35);
+
+      --status-ready-bg: rgba(37, 211, 102, 0.16);
+      --status-ready-text: #0d6e38;
+      --status-waiting-bg: rgba(0, 0, 0, 0.05);
+      --status-waiting-text: #94a3b8;
+
+      --result-bg: #f8fafc;
+      --result-border: #e2e8f0;
+
+      --url-bg: #ffffff;
+      --url-text: #0f172a;
+      --url-border: rgba(37, 211, 102, 0.4);
+
+      --btn-primary-text: #ffffff;
+      --btn-sec-bg: #ffffff;
+      --btn-sec-text: #334155;
+      --btn-sec-border: #cbd5e1;
+      --btn-sec-hover: #f1f5f9;
+
+      --pill-bg: #ffffff;
+      --pill-border: #e2e8f0;
+      --pill-text: #475569;
+
+      --divider: #e2e8f0;
+
+      --modal-overlay: rgba(15, 23, 42, 0.45);
+      --modal-bg: #ffffff;
+      --modal-border: #e2e8f0;
+      --modal-header-border: #f1f5f9;
+      --modal-search-bg: #f8fafc;
+      --modal-search-border: #cbd5e1;
+      --modal-search-text: #0f172a;
+      --modal-item-hover: rgba(37, 211, 102, 0.1);
+      --modal-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+
+      --qr-bg: #ffffff;
+      --qr-border: #e2e8f0;
+      --qr-caption: #475569;
+
+      --toast-bg: #0f172a;
+      --toast-text: #ffffff;
+
+      --toggle-bg: #ffffff;
+      --toggle-border: #cbd5e1;
+      --toggle-text: #475569;
+
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient: radial-gradient(circle at 50% 0%, #0d281e 0%, #08140f 50%, #040807 100%);
+      --ambient-glow: radial-gradient(circle, var(--primary-glow) 0%, rgba(37, 211, 102, 0) 70%);
+      --card-bg: rgba(18, 32, 25, 0.75);
+      --card-border: rgba(37, 211, 102, 0.18);
+      --card-border-hover: rgba(37, 211, 102, 0.4);
+      --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 30px -10px var(--primary-glow);
+      
+      --primary: #25d366;
+      --primary-hover: #1ebd5a;
+      --primary-glow: rgba(37, 211, 102, 0.35);
+      --primary-subtle: rgba(37, 211, 102, 0.1);
+      --accent: #128c7e;
+
+      --text-main: #f0fdf4;
+      --text-muted: #8fa89b;
+      --text-dim: #5c7569;
+
+      --input-bg: rgba(9, 18, 14, 0.85);
+      --input-border: rgba(37, 211, 102, 0.2);
+      --input-focus: #25d366;
+      --input-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+      --input-focus-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2), inset 0 2px 4px rgba(0,0,0,0.4);
+
+      --badge-bg: rgba(37, 211, 102, 0.15);
+      --badge-text: #4ade80;
+      --badge-border: rgba(74, 222, 128, 0.25);
+
+      --status-ready-bg: rgba(37, 211, 102, 0.15);
+      --status-ready-text: #4ade80;
+      --status-waiting-bg: rgba(255, 255, 255, 0.06);
+      --status-waiting-text: #5c7569;
+
+      --result-bg: rgba(8, 18, 13, 0.9);
+      --result-border: var(--card-border);
+
+      --url-bg: rgba(0, 0, 0, 0.4);
+      --url-text: #ffffff;
+      --url-border: rgba(37, 211, 102, 0.3);
+
+      --btn-primary-text: #03140a;
+      --btn-sec-bg: rgba(255, 255, 255, 0.08);
+      --btn-sec-text: #ffffff;
+      --btn-sec-border: rgba(255, 255, 255, 0.12);
+      --btn-sec-hover: rgba(255, 255, 255, 0.14);
+
+      --pill-bg: rgba(255, 255, 255, 0.05);
+      --pill-border: rgba(255, 255, 255, 0.08);
+      --pill-text: #8fa89b;
+
+      --divider: rgba(255, 255, 255, 0.07);
+
+      --modal-overlay: rgba(0, 0, 0, 0.7);
+      --modal-bg: #0d1e16;
+      --modal-border: var(--card-border);
+      --modal-header-border: rgba(255, 255, 255, 0.08);
+      --modal-search-bg: rgba(0,0,0,0.3);
+      --modal-search-border: var(--input-border);
+      --modal-search-text: #ffffff;
+      --modal-item-hover: rgba(37, 211, 102, 0.15);
+      --modal-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+
+      --qr-bg: #ffffff;
+      --qr-border: transparent;
+      --qr-caption: #1a2e22;
+
+      --toast-bg: #1f3d2b;
+      --toast-text: #ffffff;
+
+      --toggle-bg: rgba(255, 255, 255, 0.08);
+      --toggle-border: rgba(255, 255, 255, 0.12);
+      --toggle-text: #8fa89b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Background Ambient Glows */
+    .ambient-glow {
+      position: absolute;
+      width: 550px;
+      height: 550px;
+      border-radius: 50%;
+      background: var(--ambient-glow);
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 0;
+      pointer-events: none;
+      filter: blur(55px);
+      opacity: 0.75;
+      transition: background 0.3s ease;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 580px;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Top Utility Bar */
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .lang-toggle,
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      color: var(--toggle-text);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .lang-toggle:hover,
+    .theme-toggle:hover {
+      color: var(--text-main);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: var(--primary-subtle);
+      border: 1px solid var(--card-border);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: 0.02em;
+    }
+
+    [data-theme="dark"] .header-badge {
+      color: var(--primary);
+    }
+
+    .header-badge svg {
+      width: 15px;
+      height: 15px;
+      fill: currentColor;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 6px;
+      transition: color 0.3s ease;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.5;
+      transition: color 0.3s ease;
+    }
+
+    /* Main Card */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+    }
+
+    /* Input Section */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .label-row label {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+    }
+
+    .detected-country-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      border: 1px solid var(--badge-border);
+      border-radius: 9999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .detected-country-tag:hover {
+      background: rgba(37, 211, 102, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* Main Input Box */
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+      box-shadow: var(--input-shadow);
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--input-focus);
+      box-shadow: var(--input-focus-shadow);
+    }
+
+    .input-icon {
+      padding-left: 16px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 16px 14px;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.3s ease;
+    }
+
+    .main-input::placeholder {
+      color: var(--text-dim);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
+    }
+
+    .clear-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 8px 14px;
+      font-size: 16px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .clear-btn:hover {
+      color: var(--text-main);
+    }
+
+    /* Optional Message Toggle */
+    .optional-accordion {
+      margin-bottom: 22px;
+      border-top: 1px solid var(--divider);
+      padding-top: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    .accordion-trigger {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 4px 0;
+      transition: var(--transition);
+      width: 100%;
+      text-align: left;
+    }
+
+    .accordion-trigger:hover {
+      color: var(--accent);
+    }
+
+    [data-theme="dark"] .accordion-trigger:hover {
+      color: var(--primary);
+    }
+
+    .accordion-icon {
+      transition: transform 0.2s ease;
+    }
+
+    .accordion-trigger.active .accordion-icon {
+      transform: rotate(90deg);
+    }
+
+    .accordion-content {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .accordion-content.open {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .message-input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 14px;
+      color: var(--text-main);
+      font-family: inherit;
+      resize: vertical;
+      min-height: 65px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .message-input:focus {
+      border-color: var(--input-focus);
+    }
+
+    /* Result Box */
+    .result-section {
+      background: var(--result-bg);
+      border: 1px solid var(--result-border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: var(--transition);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .result-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+    }
+
+    .status-badge.ready {
+      background: var(--status-ready-bg);
+      color: var(--status-ready-text);
+    }
+
+    .status-badge.waiting {
+      background: var(--status-waiting-bg);
+      color: var(--status-waiting-text);
+    }
+
+    .url-display {
+      background: var(--url-bg);
+      border: 1px dashed var(--url-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--url-text);
+      word-break: break-all;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      user-select: all;
+      transition: var(--transition);
+    }
+
+    .url-display.empty {
+      color: var(--text-dim);
+      font-style: italic;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
+    }
+
+    /* Action Buttons */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--btn-primary-text);
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    .btn-secondary {
+      background: var(--btn-sec-bg);
+      color: var(--btn-sec-text);
+      border: 1px solid var(--btn-sec-border);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--btn-sec-hover);
+      color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    .btn-icon-only {
+      padding: 12px 14px;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* QR Code Drawer / Preview */
+    .qr-box {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--qr-bg);
+      border: 1px solid var(--qr-border);
+      border-radius: var(--radius-md);
+      margin-top: 14px;
+      animation: fadeIn 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .qr-box.show {
+      display: flex;
+    }
+
+    .qr-box canvas, .qr-box img {
+      border-radius: 8px;
+    }
+
+    .qr-caption {
+      margin-top: 10px;
+      color: var(--qr-caption);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    /* Country Picker Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--modal-overlay);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--modal-bg);
+      border: 1px solid var(--modal-border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 440px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--modal-shadow);
+      overflow: hidden;
+      transition: background 0.3s ease;
+    }
+
+    .modal-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--modal-header-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+
+    .modal-search {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--modal-header-border);
+    }
+
+    .modal-search input {
+      width: 100%;
+      background: var(--modal-search-bg);
+      border: 1px solid var(--modal-search-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      color: var(--modal-search-text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .country-list {
+      overflow-y: auto;
+      padding: 8px;
+      max-height: 380px;
+    }
+
+    .country-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .country-item:hover {
+      background: var(--modal-item-hover);
+    }
+
+    .country-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    .country-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    [data-theme="dark"] .country-code {
+      color: var(--primary);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      background: var(--toast-bg);
+      border: 1px solid var(--primary);
+      color: var(--toast-text);
+      padding: 12px 22px;
+      border-radius: 9999px;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 15px var(--primary-glow);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Quick Examples Pills */
+    .examples-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .example-title {
+      font-size: 12px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .example-pill {
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      color: var(--pill-text);
+      border-radius: 9999px;
+      padding: 3px 10px;
+      font-size: 11.5px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .example-pill:hover {
+      background: var(--primary-subtle);
+      border-color: var(--card-border);
+      color: var(--accent);
+    }
+
+    [data-theme="dark"] .example-pill:hover {
+      color: var(--primary);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 20px 16px;
+      }
+      .actions-grid {
+        grid-template-columns: 1fr;
+      }
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <div class="container">
+    <!-- Top Utility Bar -->
+    <div class="top-bar">
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch Language / 切换语言">
+        <span class="lang-icon">🌐</span>
+        <span id="langLabel">中文</span>
+      </button>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span id="themeToggleIcon">🌙</span>
+        <span id="themeToggleText">Dark Mode</span>
+      </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-badge">
+        <svg viewBox="0 0 24 24">
+          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.177.182-.076.355.101.173.449.741.964 1.201.662.591 1.221.774 1.394.861.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.043.072.043.419-.101.824zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.435 5.176L2 22l4.957-1.399C8.423 21.503 10.155 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+        </svg>
+        <span id="badgeText">Smart wa.me Generator</span>
+      </div>
+      <h1 id="headerTitle">Direct WhatsApp Link</h1>
+      <p id="headerSubtitle">Paste any local/international number or username. Instant auto-detection & link creation.</p>
+    </header>
+
+    <!-- Main Generator Card -->
+    <main class="card">
+      
+      <!-- Input Group -->
+      <div class="input-group">
+        <div class="label-row">
+          <label for="phoneInput" id="phoneLabel">Phone Number or Username</label>
+          <span class="detected-country-tag" id="countryTag" title="Click to change country">
+            <span id="flagIcon">🇲🇾</span>
+            <span id="countryLabel">Malaysia (+60)</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor"><path d="M1 1L5 5L9 1"/></svg>
+          </span>
+        </div>
+
+        <div class="input-wrapper">
+          <div class="input-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </div>
+          <input
+            type="text"
+            id="phoneInput"
+            class="main-input"
+            placeholder="e.g. 0164210987 or +60164210987 or @username"
+            autofocus
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="clear-btn" id="clearBtn" title="Clear input">✕</button>
+        </div>
+      </div>
+
+      <!-- Quick Examples -->
+      <div class="examples-row">
+        <span class="example-title" id="quickTryLabel">Quick try:</span>
+        <span class="example-pill" onclick="setExample('0164210987')">0164210987 (MY)</span>
+        <span class="example-pill" onclick="setExample('+65 9123 4567')">+65 (SG)</span>
+        <span class="example-pill" onclick="setExample('07123456789')">07123 (UK)</span>
+        <span class="example-pill" onclick="setExample('@antigravity')">@username</span>
+      </div>
+
+      <!-- Optional Pre-filled Message Accordion -->
+      <div class="optional-accordion" style="margin-top: 18px;">
+        <button class="accordion-trigger" id="accordionBtn" type="button">
+          <span class="accordion-icon">▶</span>
+          <span id="accordionLabel">Add pre-filled message (optional)</span>
+        </button>
+        <div class="accordion-content" id="accordionContent">
+          <textarea
+            id="messageInput"
+            class="message-input"
+            placeholder="Hi, I'm reaching out from your website..."
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Result Section -->
+      <div class="result-section">
+        <div class="result-header">
+          <h2 class="result-title" id="resultTitle" style="margin: 0; font-size: 12px;">Generated WhatsApp Link</h2>
+          <span class="status-badge waiting" id="statusBadge">Awaiting Input</span>
+        </div>
+
+        <div class="url-display empty" id="urlDisplay">
+          Type or paste a number above...
+        </div>
+
+        <div class="actions-grid">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="openBtn" style="pointer-events: none; opacity: 0.4;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.177.182-.076.355.101.173.449.741.964 1.201.662.591 1.221.774 1.394.861.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.043.072.043.419-.101.824zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.435 5.176L2 22l4.957-1.399C8.423 21.503 10.155 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+            </svg>
+            <span id="openBtnText">Open Chat</span>
+          </a>
+
+          <button class="btn btn-secondary" id="copyBtn" disabled>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="copyBtnText">Copy Link</span>
+          </button>
+
+          <button class="btn btn-secondary btn-icon-only" id="qrBtn" title="Show QR Code" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Dynamic QR Display -->
+        <div class="qr-box" id="qrBox">
+          <div id="qrcode"></div>
+          <div class="qr-caption" id="qrCaption">Scan with Phone Camera to Open Chat</div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Country Selection Modal -->
+  <div class="modal-overlay" id="countryModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Select Country Code</h3>
+        <button class="modal-close" id="modalCloseBtn">✕</button>
+      </div>
+      <div class="modal-search">
+        <input type="text" id="countrySearch" placeholder="Search country or code (e.g. Malaysia, +60, 65)..." />
+      </div>
+      <div class="country-list" id="countryList">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Message -->
+  <div class="toast" id="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toastText">Link copied to clipboard!</span>
+  </div>
+
+  <script>
+    // --- Comprehensive Country Database with Multilingual Names ---
+    const COUNTRIES = [
+      { name: "Malaysia", nameZh: "马来西亚", code: "60", flag: "🇲🇾", prefixPatterns: [/^0?1[0-9]{8,9}$/] },
+      { name: "Singapore", nameZh: "新加坡", code: "65", flag: "🇸🇬", prefixPatterns: [/^[89][0-9]{7}$/, /^0?[89][0-9]{7}$/] },
+      { name: "China", nameZh: "中国", code: "86", flag: "🇨🇳", prefixPatterns: [/^0?1[3-9][0-9]{9}$/] },
+      { name: "Hong Kong", nameZh: "中国香港", code: "852", flag: "🇭🇰", prefixPatterns: [/^[569][0-9]{7}$/] },
+      { name: "Taiwan", nameZh: "中国台湾", code: "886", flag: "🇹🇼", prefixPatterns: [/^0?9[0-9]{8}$/] },
+      { name: "Indonesia", nameZh: "印度尼西亚", code: "62", flag: "🇮🇩", prefixPatterns: [/^0?8[0-9]{8,11}$/] },
+      { name: "United States / Canada", nameZh: "美国 / 加拿大", code: "1", flag: "🇺🇸", prefixPatterns: [/^[2-9][0-9]{9}$/] },
+      { name: "United Kingdom", nameZh: "英国", code: "44", flag: "🇬🇧", prefixPatterns: [/^0?7[0-9]{9}$/] },
+      { name: "Australia", nameZh: "澳大利亚", code: "61", flag: "🇦🇺", prefixPatterns: [/^0?4[0-9]{8}$/] },
+      { name: "India", nameZh: "印度", code: "91", flag: "🇮🇳", prefixPatterns: [/^0?[6-9][0-9]{9}$/] },
+      { name: "Philippines", nameZh: "菲律宾", code: "63", flag: "🇵🇭", prefixPatterns: [/^0?9[0-9]{9}$/] },
+      { name: "Thailand", nameZh: "泰国", code: "66", flag: "🇹🇭", prefixPatterns: [/^0?[689][0-9]{8}$/] },
+      { name: "Vietnam", nameZh: "越南", code: "84", flag: "🇻🇳", prefixPatterns: [/^0?[35789][0-9]{8}$/] },
+      { name: "Japan", nameZh: "日本", code: "81", flag: "🇯🇵", prefixPatterns: [/^0?[789]0[0-9]{8}$/] },
+      { name: "South Korea", nameZh: "韩国", code: "82", flag: "🇰🇷", prefixPatterns: [/^0?10[0-9]{8}$/] },
+      { name: "Germany", nameZh: "德国", code: "49", flag: "🇩🇪", prefixPatterns: [/^0?1[567][0-9]{8,9}$/] },
+      { name: "France", nameZh: "法国", code: "33", flag: "🇫🇷", prefixPatterns: [/^0?[67][0-9]{8}$/] },
+      { name: "United Arab Emirates", nameZh: "阿联酋", code: "971", flag: "🇦🇪", prefixPatterns: [/^0?5[0-9]{8}$/] },
+      { name: "Saudi Arabia", nameZh: "沙特阿拉伯", code: "966", flag: "🇸🇦", prefixPatterns: [/^0?5[0-9]{8}$/] },
+      { name: "Brazil", nameZh: "巴西", code: "55", flag: "🇧🇷", prefixPatterns: [/^0?[1-9]{2}9[0-9]{8}$/] },
+      { name: "New Zealand", nameZh: "新西兰", code: "64", flag: "🇳🇿", prefixPatterns: [/^0?2[0-9]{7,9}$/] }
+    ];
+
+    // --- I18N Localization Dictionary ---
+    const I18N = {
+      en: {
+        pageTitle: "WhatsApp Direct Link & QR Generator | wa.me Chat Link",
+        metaDesc: "Instant WhatsApp direct chat link and QR code generator with auto country detection and username support.",
+        badge: "Smart wa.me Generator",
+        title: "Direct WhatsApp Link",
+        subtitle: "Paste any local/international number or username. Instant auto-detection & link creation.",
+        phoneLabel: "Phone Number or Username",
+        phonePlaceholder: "e.g. 0164210987 or +60164210987 or @username",
+        countryTooltip: "Click to change country",
+        quickTry: "Quick try:",
+        accordionBtn: "Add pre-filled message (optional)",
+        messagePlaceholder: "Hi, I'm reaching out from your website...",
+        resultTitle: "Generated WhatsApp Link",
+        statusWaiting: "Awaiting Input",
+        statusReady: "Ready",
+        statusUsername: "Username Detected",
+        urlEmpty: "Type or paste a number above...",
+        openChat: "Open Chat",
+        copyLink: "Copy Link",
+        copied: "Copied!",
+        qrTitle: "Show QR Code",
+        qrCaption: "Scan with Phone Camera to Open Chat",
+        modalTitle: "Select Country Code",
+        modalSearch: "Search country or code (e.g. Malaysia, +60, 65)...",
+        toastCopied: "Link copied to clipboard!",
+        themeDark: "Dark Mode",
+        themeLight: "Light Mode",
+        langToggleLabel: "中文",
+        langToggleAria: "Switch to Chinese / 切换至中文"
+      },
+      zh: {
+        pageTitle: "WhatsApp 直接链接与二维码生成器 | 免存号码直接聊天",
+        metaDesc: "免费 WhatsApp 对话直链与二维码生成器，支持智能识别国家区号、预设信息与用户名，无需添加联系人即可直接发送消息。",
+        badge: "智能 wa.me 直链生成器",
+        title: "WhatsApp 免存号码直连",
+        subtitle: "输入本地/国际手机号码或用户名，即时自动识别国家区号并生成聊天链接与二维码。",
+        phoneLabel: "手机号码或 WhatsApp 用户名",
+        phonePlaceholder: "例如 0164210987、+60164210987 或 @用户名",
+        countryTooltip: "点击更换国家/地区区号",
+        quickTry: "快速示例:",
+        accordionBtn: "添加预设信息（可选）",
+        messagePlaceholder: "您好！我在您的网站看到相关信息，想了解更多详情...",
+        resultTitle: "生成的 WhatsApp 对话链接",
+        statusWaiting: "等待输入",
+        statusReady: "已就绪",
+        statusUsername: "已识别用户名",
+        urlEmpty: "请在上方输入或粘贴手机号码...",
+        openChat: "打开聊天",
+        copyLink: "复制链接",
+        copied: "已复制！",
+        qrTitle: "显示二维码",
+        qrCaption: "使用手机相机扫码立即开始对话",
+        modalTitle: "选择国家与地区区号",
+        modalSearch: "搜索国家/地区或区号（例如 马来西亚, 中国, +60, 86）...",
+        toastCopied: "链接已复制到剪贴板！",
+        themeDark: "深色模式",
+        themeLight: "浅色模式",
+        langToggleLabel: "English",
+        langToggleAria: "Switch to English / 切换为英文"
+      }
+    };
+
+    // Detect user's language automatically
+    function detectUserLanguage() {
+      const saved = localStorage.getItem("wa_lang");
+      if (saved === "zh" || saved === "en") return saved;
+      try {
+        const langs = navigator.languages || [navigator.language || navigator.userLanguage || ""];
+        for (const l of langs) {
+          if (typeof l === "string" && l.toLowerCase().startsWith("zh")) {
+            return "zh";
+          }
+        }
+      } catch (e) {}
+      return "en";
+    }
+
+    let currentLang = detectUserLanguage();
+
+    // Detect user's timezone to set smart initial country default
+    function detectDefaultCountry() {
+      try {
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+        if (timeZone.includes("Kuala_Lumpur") || timeZone.includes("Kuching")) return COUNTRIES.find(c => c.code === "60");
+        if (timeZone.includes("Singapore")) return COUNTRIES.find(c => c.code === "65");
+        if (timeZone.includes("Jakarta") || timeZone.includes("Pontianak") || timeZone.includes("Makassar")) return COUNTRIES.find(c => c.code === "62");
+        if (timeZone.includes("London")) return COUNTRIES.find(c => c.code === "44");
+        if (timeZone.includes("America/")) return COUNTRIES.find(c => c.code === "1");
+        if (timeZone.includes("Sydney") || timeZone.includes("Melbourne") || timeZone.includes("Perth")) return COUNTRIES.find(c => c.code === "61");
+        if (timeZone.includes("Shanghai") || timeZone.includes("Chongqing") || timeZone.includes("Urumqi") || timeZone.includes("Beijing")) return COUNTRIES.find(c => c.code === "86");
+        if (timeZone.includes("Hong_Kong")) return COUNTRIES.find(c => c.code === "852");
+        if (timeZone.includes("Taipei")) return COUNTRIES.find(c => c.code === "886");
+        if (timeZone.includes("Bangkok")) return COUNTRIES.find(c => c.code === "66");
+      } catch (e) {}
+      return COUNTRIES[0]; // Default to Malaysia (+60)
+    }
+
+    let currentCountry = detectDefaultCountry();
+    let currentGeneratedUrl = "";
+    let isUsernameMode = false;
+    let qrCodeInstance = null;
+
+    // DOM Elements
+    const langToggle = document.getElementById("langToggle");
+    const langLabel = document.getElementById("langLabel");
+    const themeToggle = document.getElementById("themeToggle");
+    const themeToggleIcon = document.getElementById("themeToggleIcon");
+    const themeToggleText = document.getElementById("themeToggleText");
+    const badgeText = document.getElementById("badgeText");
+    const headerTitle = document.getElementById("headerTitle");
+    const headerSubtitle = document.getElementById("headerSubtitle");
+    const phoneLabel = document.getElementById("phoneLabel");
+    const phoneInput = document.getElementById("phoneInput");
+    const clearBtn = document.getElementById("clearBtn");
+    const quickTryLabel = document.getElementById("quickTryLabel");
+    const countryTag = document.getElementById("countryTag");
+    const flagIcon = document.getElementById("flagIcon");
+    const countryLabel = document.getElementById("countryLabel");
+    const accordionBtn = document.getElementById("accordionBtn");
+    const accordionLabel = document.getElementById("accordionLabel");
+    const accordionContent = document.getElementById("accordionContent");
+    const messageInput = document.getElementById("messageInput");
+    const resultTitle = document.getElementById("resultTitle");
+    const urlDisplay = document.getElementById("urlDisplay");
+    const statusBadge = document.getElementById("statusBadge");
+    const openBtn = document.getElementById("openBtn");
+    const openBtnText = document.getElementById("openBtnText");
+    const copyBtn = document.getElementById("copyBtn");
+    const copyBtnText = document.getElementById("copyBtnText");
+    const qrBtn = document.getElementById("qrBtn");
+    const qrBox = document.getElementById("qrBox");
+    const qrCaption = document.getElementById("qrCaption");
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toastText");
+    const countryModal = document.getElementById("countryModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    const countrySearch = document.getElementById("countrySearch");
+    const countryList = document.getElementById("countryList");
+
+    // Initialize & Apply Language
+    function applyLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
+      const t = I18N[lang] || I18N.en;
+
+      document.title = t.pageTitle;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute("content", t.metaDesc);
+
+      badgeText.textContent = t.badge;
+      headerTitle.textContent = t.title;
+      headerSubtitle.textContent = t.subtitle;
+      phoneLabel.textContent = t.phoneLabel;
+      phoneInput.placeholder = t.phonePlaceholder;
+      countryTag.title = t.countryTooltip;
+      quickTryLabel.textContent = t.quickTry;
+      accordionLabel.textContent = t.accordionBtn;
+      messageInput.placeholder = t.messagePlaceholder;
+      resultTitle.textContent = t.resultTitle;
+      openBtnText.textContent = t.openChat;
+      qrBtn.title = t.qrTitle;
+      qrCaption.textContent = t.qrCaption;
+      modalTitle.textContent = t.modalTitle;
+      countrySearch.placeholder = t.modalSearch;
+      langLabel.textContent = t.langToggleLabel;
+      langToggle.setAttribute("aria-label", t.langToggleAria);
+
+      // Update theme toggle label for active language
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      themeToggleText.textContent = isDark ? t.themeLight : t.themeDark;
+
+      // Update copy button label if not in transient copied state
+      if (copyBtnText.textContent !== t.copied) {
+        copyBtnText.textContent = t.copyLink;
+      }
+
+      // Update country label and list
+      updateCountryUI(currentCountry);
+
+      // Re-evaluate input texts and status badge
+      processInput();
+      localStorage.setItem("wa_lang", lang);
+    }
+
+    // Initialize UI with detected default country
+    function updateCountryUI(country) {
+      currentCountry = country;
+      flagIcon.textContent = country.flag;
+      const displayName = currentLang === "zh" ? (country.nameZh || country.name) : country.name;
+      countryLabel.textContent = `${displayName} (+${country.code})`;
+      processInput();
+    }
+
+    // --- Smart Auto-Detection & Link Generation ---
+    function processInput() {
+      const raw = phoneInput.value.trim();
+      const message = messageInput.value.trim();
+      const t = I18N[currentLang] || I18N.en;
+
+      // Show / hide clear button
+      clearBtn.style.display = raw.length > 0 ? "flex" : "none";
+
+      if (!raw) {
+        currentGeneratedUrl = "";
+        urlDisplay.textContent = t.urlEmpty;
+        urlDisplay.classList.add("empty");
+        statusBadge.textContent = t.statusWaiting;
+        statusBadge.className = "status-badge waiting";
+        setActionsState(false);
+        hideQr();
+        return;
+      }
+
+      // Check if input is a WhatsApp username (starts with @ or contains letters without numbers/plus)
+      const isUsername = raw.startsWith("@") || (/^[a-zA-Z._0-9]+$/.test(raw) && /[a-zA-Z]/.test(raw));
+
+      if (isUsername) {
+        isUsernameMode = true;
+        const cleanUsername = raw.replace(/^@/, "").trim();
+        countryTag.style.display = "none";
+
+        let finalUrl = `https://wa.me/${cleanUsername}`;
+        if (message) {
+          finalUrl += `?text=${encodeURIComponent(message)}`;
+        }
+
+        currentGeneratedUrl = finalUrl;
+        urlDisplay.textContent = finalUrl;
+        urlDisplay.classList.remove("empty");
+        statusBadge.textContent = t.statusUsername;
+        statusBadge.className = "status-badge ready";
+        setActionsState(true);
+        updateQrIfOpen();
+        return;
+      }
+
+      // It's a phone number
+      isUsernameMode = false;
+      countryTag.style.display = "inline-flex";
+
+      // Clean digits & check for explicit country code prefix
+      let digitsOnly = raw.replace(/[^0-9+]/g, "");
+
+      let matchedCountry = null;
+      let cleanedPhone = "";
+
+      if (digitsOnly.startsWith("+")) {
+        const noPlus = digitsOnly.substring(1);
+        const sorted = [...COUNTRIES].sort((a, b) => b.code.length - a.code.length);
+        for (const c of sorted) {
+          if (noPlus.startsWith(c.code)) {
+            matchedCountry = c;
+            cleanedPhone = noPlus;
+            break;
+          }
+        }
+        if (!matchedCountry) {
+          cleanedPhone = noPlus;
+        }
+      } else {
+        const sorted = [...COUNTRIES].sort((a, b) => b.code.length - a.code.length);
+        for (const c of sorted) {
+          if (digitsOnly.startsWith(c.code) && digitsOnly.length >= c.code.length + 7) {
+            matchedCountry = c;
+            cleanedPhone = digitsOnly;
+            break;
+          }
+        }
+
+        if (!matchedCountry) {
+          for (const c of COUNTRIES) {
+            if (c.prefixPatterns) {
+              for (const pattern of c.prefixPatterns) {
+                if (pattern.test(digitsOnly)) {
+                  matchedCountry = c;
+                  break;
+                }
+              }
+            }
+            if (matchedCountry) break;
+          }
+
+          if (!matchedCountry) {
+            matchedCountry = currentCountry;
+          }
+
+          let localNumber = digitsOnly;
+          if (localNumber.startsWith("0")) {
+            localNumber = localNumber.substring(1);
+          }
+          cleanedPhone = matchedCountry.code + localNumber;
+        }
+      }
+
+      if (matchedCountry && matchedCountry.code !== currentCountry.code) {
+        currentCountry = matchedCountry;
+        flagIcon.textContent = matchedCountry.flag;
+        const displayName = currentLang === "zh" ? (matchedCountry.nameZh || matchedCountry.name) : matchedCountry.name;
+        countryLabel.textContent = `${displayName} (+${matchedCountry.code})`;
+      }
+
+      let finalUrl = `https://wa.me/${cleanedPhone}`;
+      if (message) {
+        finalUrl += `?text=${encodeURIComponent(message)}`;
+      }
+
+      currentGeneratedUrl = finalUrl;
+      urlDisplay.textContent = finalUrl;
+      urlDisplay.classList.remove("empty");
+      statusBadge.textContent = t.statusReady;
+      statusBadge.className = "status-badge ready";
+      setActionsState(true);
+      updateQrIfOpen();
+    }
+
+    let generateDebounce;
+    let lastTrackedUrl = "";
+    function setActionsState(enabled) {
+      if (enabled && currentGeneratedUrl) {
+        openBtn.href = currentGeneratedUrl;
+        openBtn.style.pointerEvents = "auto";
+        openBtn.style.opacity = "1";
+        copyBtn.disabled = false;
+        qrBtn.disabled = false;
+
+        if (currentGeneratedUrl !== lastTrackedUrl) {
+          clearTimeout(generateDebounce);
+          generateDebounce = setTimeout(() => {
+            lastTrackedUrl = currentGeneratedUrl;
+            trackEvent("link_generated");
+          }, 1200);
+        }
+      } else {
+        openBtn.removeAttribute("href");
+        openBtn.style.pointerEvents = "none";
+        openBtn.style.opacity = "0.4";
+        copyBtn.disabled = true;
+        qrBtn.disabled = true;
+      }
+    }
+
+    // --- Theme Toggle Logic ---
+    function applyTheme(theme) {
+      const t = I18N[currentLang] || I18N.en;
+      const themeColorMeta = document.getElementById("themeColorMeta");
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        themeToggleIcon.textContent = "☀️";
+        themeToggleText.textContent = t.themeLight;
+        if (themeColorMeta) themeColorMeta.setAttribute("content", "#08140f");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        themeToggleIcon.textContent = "🌙";
+        themeToggleText.textContent = t.themeDark;
+        if (themeColorMeta) themeColorMeta.setAttribute("content", "#e3f8ec");
+      }
+      localStorage.setItem("wa_generator_theme", theme);
+      updateQrIfOpen();
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      applyTheme(isDark ? "light" : "dark");
+    });
+
+    langToggle.addEventListener("click", () => {
+      applyLanguage(currentLang === "en" ? "zh" : "en");
+    });
+
+    // Default to light theme as requested, honoring any user preference
+    const savedTheme = localStorage.getItem("wa_generator_theme") || "light";
+    applyTheme(savedTheme);
+
+    // --- QR Code Rendering ---
+    function renderQr() {
+      if (!currentGeneratedUrl) return;
+      const qrContainer = document.getElementById("qrcode");
+      qrContainer.innerHTML = "";
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      qrCodeInstance = new QRCode(qrContainer, {
+        text: currentGeneratedUrl,
+        width: 170,
+        height: 170,
+        colorDark: isDark ? "#08140f" : "#0f172a",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      qrBox.classList.add("show");
+    }
+
+    function hideQr() {
+      qrBox.classList.remove("show");
+    }
+
+    function updateQrIfOpen() {
+      if (qrBox.classList.contains("show")) {
+        renderQr();
+      }
+    }
+
+    // --- Toast Notifications ---
+    let toastTimeout;
+    function showToast(msg) {
+      toastText.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2400);
+    }
+
+    // --- Analytics Telemetry (Cloudflare D1) ---
+    function trackEvent(eventName) {
+      try {
+        const payload = JSON.stringify({ event: eventName });
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon("/api/track", new Blob([payload], { type: "application/json" }));
+        } else {
+          fetch("/api/track", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: payload,
+            keepalive: true
+          }).catch(() => {});
+        }
+      } catch (e) {
+        // Silently ignore to guarantee zero impact on user experience
+      }
+    }
+
+    // --- Event Listeners ---
+    phoneInput.addEventListener("input", processInput);
+    messageInput.addEventListener("input", processInput);
+
+    clearBtn.addEventListener("click", () => {
+      phoneInput.value = "";
+      phoneInput.focus();
+      processInput();
+    });
+
+    accordionBtn.addEventListener("click", () => {
+      accordionBtn.classList.toggle("active");
+      accordionContent.classList.toggle("open");
+    });
+
+    openBtn.addEventListener("click", () => {
+      if (currentGeneratedUrl) {
+        trackEvent("open_whatsapp");
+      }
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      if (!currentGeneratedUrl) return;
+      trackEvent("copy_link");
+      const t = I18N[currentLang] || I18N.en;
+      try {
+        await navigator.clipboard.writeText(currentGeneratedUrl);
+        copyBtnText.textContent = t.copied;
+        showToast(t.toastCopied);
+        setTimeout(() => {
+          copyBtnText.textContent = t.copyLink;
+        }, 2000);
+      } catch (err) {
+        const temp = document.createElement("input");
+        temp.value = currentGeneratedUrl;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        copyBtnText.textContent = t.copied;
+        showToast(t.toastCopied);
+        setTimeout(() => {
+          copyBtnText.textContent = t.copyLink;
+        }, 2000);
+      }
+    });
+
+    qrBtn.addEventListener("click", () => {
+      if (qrBox.classList.contains("show")) {
+        hideQr();
+      } else {
+        renderQr();
+        trackEvent("show_qr");
+      }
+    });
+
+    // Quick helper for example pills
+    window.setExample = function(text) {
+      phoneInput.value = text;
+      processInput();
+      phoneInput.focus();
+    };
+
+    // --- Country Selection Modal Logic ---
+    function renderCountryList(filterText = "") {
+      const search = filterText.toLowerCase().trim();
+      countryList.innerHTML = "";
+      const filtered = COUNTRIES.filter(c => 
+        c.name.toLowerCase().includes(search) || 
+        (c.nameZh && c.nameZh.toLowerCase().includes(search)) ||
+        c.code.includes(search)
+      );
+
+      filtered.forEach(c => {
+        const item = document.createElement("div");
+        item.className = "country-item";
+        const displayName = currentLang === "zh" ? (c.nameZh || c.name) : c.name;
+        item.innerHTML = `
+          <div class="country-left">
+            <span>${c.flag}</span>
+            <span>${displayName}</span>
+          </div>
+          <span class="country-code">+${c.code}</span>
+        `;
+        item.addEventListener("click", () => {
+          updateCountryUI(c);
+          closeModal();
+        });
+        countryList.appendChild(item);
+      });
+    }
+
+    function openModal() {
+      renderCountryList();
+      countrySearch.value = "";
+      countryModal.classList.add("active");
+      countrySearch.focus();
+    }
+
+    function closeModal() {
+      countryModal.classList.remove("active");
+    }
+
+    countryTag.addEventListener("click", openModal);
+    modalCloseBtn.addEventListener("click", closeModal);
+    countryModal.addEventListener("click", (e) => {
+      if (e.target === countryModal) closeModal();
+    });
+    countrySearch.addEventListener("input", (e) => renderCountryList(e.target.value));
+
+    // Initialize default language & country
+    applyLanguage(currentLang);
+
+    // Initial page view event
+    trackEvent("page_view");
+  </script>
+</body>
+</html>

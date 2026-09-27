@@ -1,0 +1,14 @@
+name = "wa-link-cron-reporter"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# Daily cron trigger: runs at 16:00 UTC (12:00 AM midnight MYT / UTC+8)
+[triggers]
+crons = ["0 16 * * *"]
+
+# D1 Database binding
+# Replace database_id with your Cloudflare D1 database ID
+[[d1_databases]]
+binding = "DB"
+database_name = "wa_analytics"
+database_id = "YOUR_D1_DATABASE_ID"
