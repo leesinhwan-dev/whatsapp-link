@@ -1,0 +1,9 @@
+name = "whatsapp-link"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "."
+
+# Bind D1 Database to Pages Functions (/api/track)
+[[d1_databases]]
+binding = "DB"
+database_name = "wa_analytics"
+database_id = "b824d720-471d-4de1-b40e-84cd400a4586"
