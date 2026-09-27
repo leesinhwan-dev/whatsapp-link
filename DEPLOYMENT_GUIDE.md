@@ -232,7 +232,7 @@ Inside the [`cron-reporter/`](file:///Users/leesinhwan/Development/whatsapp-link
 
 3. **Verify Immediately:**
    Once deployed, test sending a notification on demand by opening in your browser:
-   `https://wa-link-cron-reporter.<your-subdomain>.workers.dev/test-report`
+   `https://wa-link-cron-reporter.dev-leesinhwan.workers.dev/test-report`
    
    Check your Discord channel — you should instantly see your rich analytics card!
 
