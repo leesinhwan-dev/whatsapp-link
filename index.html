@@ -1474,10 +1474,20 @@
       }, 2400);
     }
 
-    // --- Analytics Telemetry (Cloudflare D1) ---
+    // --- Analytics Telemetry (Cloudflare D1 & Bot Verification) ---
+    let userHasInteracted = false;
+    const markInteraction = () => { userHasInteracted = true; };
+    window.addEventListener("pointerdown", markInteraction, { once: true, passive: true });
+    window.addEventListener("keydown", markInteraction, { once: true, passive: true });
+    window.addEventListener("scroll", markInteraction, { once: true, passive: true });
+
     function trackEvent(eventName) {
       try {
-        const payload = JSON.stringify({ event: eventName });
+        const payload = JSON.stringify({
+          event: eventName,
+          has_interacted: userHasInteracted,
+          is_webdriver: Boolean(navigator.webdriver)
+        });
         if (navigator.sendBeacon) {
           navigator.sendBeacon("/api/track", new Blob([payload], { type: "application/json" }));
         } else {

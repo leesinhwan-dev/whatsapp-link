@@ -14,8 +14,12 @@ function countryToFlag(countryCode) {
 
 // Format the analytics data into a sleek Discord Webhook Embed
 function buildDiscordEmbed(stats, periodHours = 24) {
-  const eventCounts = stats.events || {};
-  const views = eventCounts["page_view"] || 0;
+  const humanViews = stats.humanPageViews || 0;
+  const uniqueHumans = stats.uniqueHumanIps || 0;
+  const totalViews = stats.totalPageViews || 0;
+  const botCount = stats.botCount || 0;
+
+  const eventCounts = stats.humanEvents || {};
   const generated = eventCounts["link_generated"] || 0;
   const copied = eventCounts["copy_link"] || 0;
   const opened = eventCounts["open_whatsapp"] || 0;
@@ -25,7 +29,7 @@ function buildDiscordEmbed(stats, periodHours = 24) {
   let countryText = "No regional data yet";
   if (stats.countries && stats.countries.length > 0) {
     countryText = stats.countries
-      .map(c => `${countryToFlag(c.country)}: **${c.count}** (${Math.round((c.count / (stats.totalEvents || 1)) * 100)}%)`)
+      .map(c => `${countryToFlag(c.country)}: **${c.count}** views (${c.unique_ips} unique IPs)`)
       .join("\n");
   }
 
@@ -38,8 +42,8 @@ function buildDiscordEmbed(stats, periodHours = 24) {
       .join("  |  ");
   }
 
-  // Conversion rate (link copied / views)
-  const conversionRate = views > 0 ? ((copied / views) * 100).toFixed(1) : "0.0";
+  // Conversion rate (link copied / real human views)
+  const conversionRate = humanViews > 0 ? ((copied / humanViews) * 100).toFixed(1) : "0.0";
 
   return {
     username: "WhatsApp Link Bot",
@@ -47,27 +51,28 @@ function buildDiscordEmbed(stats, periodHours = 24) {
     embeds: [
       {
         title: "📊 Daily Site & Usage Analytics",
-        description: `Summary of activity in the last **${periodHours} hours**`,
+        description: `Verified Human Activity in the last **${periodHours} hours**`,
         color: 0x25d366, // WhatsApp Green
         fields: [
           {
-            name: "👁️ Traffic",
-            value: `**${views}** Total Visits`,
+            name: "👤 Real Human Traffic",
+            value: `**${uniqueHumans}** Unique IPs\n**${humanViews}** Page Views`,
             inline: true
           },
           {
-            name: "✨ Links Created",
-            value: `**${generated}** Generated`,
+            name: "🤖 Filtered Traffic",
+            value: `**${botCount}** Bots/Crawlers\n**${totalViews}** Total Hits`,
             inline: true
           },
           {
-            name: "🎯 Conversion",
+            name: "🎯 Conversion Rate",
             value: `**${conversionRate}%** Copied`,
             inline: true
           },
           {
-            name: "⚡ Key User Actions",
+            name: "⚡ Real Human Actions",
             value: [
+              `✨ **${generated}** Links Generated`,
               `📋 **${copied}** Links Copied`,
               `💬 **${opened}** Direct WhatsApp Chats Opened`,
               `📱 **${qrShown}** QR Codes Displayed`
@@ -75,18 +80,18 @@ function buildDiscordEmbed(stats, periodHours = 24) {
             inline: false
           },
           {
-            name: "🌍 Top Visitor Regions",
+            name: "🌍 Top Human Regions",
             value: countryText,
             inline: false
           },
           {
-            name: "💻 Devices",
+            name: "💻 Human Devices",
             value: deviceText,
             inline: false
           }
         ],
         footer: {
-          text: "Cloudflare D1 + Edge Workers"
+          text: "Cloudflare D1 + IP Verification"
         },
         timestamp: new Date().toISOString()
       }
@@ -105,43 +110,60 @@ async function sendDailyReport(env, hours = 24) {
 
   const timeFilter = `datetime('now', '-${hours} hours')`;
 
-  // 1. Query counts per event type
-  const eventResults = await env.DB.prepare(
+  // 1. Query traffic overview (separating Real Humans from Bots)
+  const overview = await env.DB.prepare(
+    `SELECT 
+       COUNT(*) as total_events,
+       SUM(CASE WHEN event_type = 'page_view' THEN 1 ELSE 0 END) as total_page_views,
+       SUM(CASE WHEN event_type = 'page_view' AND (is_bot IS NULL OR is_bot = 0) THEN 1 ELSE 0 END) as human_page_views,
+       COUNT(DISTINCT CASE WHEN (is_bot IS NULL OR is_bot = 0) AND ip_address IS NOT NULL AND ip_address != 'Unknown' THEN ip_address END) as unique_human_ips,
+       SUM(CASE WHEN is_bot = 1 THEN 1 ELSE 0 END) as bot_events
+     FROM analytics_events 
+     WHERE created_at >= ${timeFilter}`
+  ).first();
+
+  // 2. Query event counts for real humans
+  const actionResults = await env.DB.prepare(
     `SELECT event_type, COUNT(*) as count 
      FROM analytics_events 
-     WHERE created_at >= ${timeFilter}
+     WHERE created_at >= ${timeFilter} AND (is_bot IS NULL OR is_bot = 0)
      GROUP BY event_type`
   ).all();
 
-  const events = {};
-  let totalEvents = 0;
-  for (const row of eventResults.results || []) {
-    events[row.event_type] = row.count;
-    totalEvents += row.count;
+  const humanEvents = {};
+  for (const row of actionResults.results || []) {
+    humanEvents[row.event_type] = row.count;
   }
 
-  // 2. Query top 5 countries
+  // 3. Query top 5 countries for real humans with unique IP count
   const countryResults = await env.DB.prepare(
-    `SELECT country, COUNT(*) as count 
+    `SELECT 
+       country, 
+       COUNT(*) as count,
+       COUNT(DISTINCT ip_address) as unique_ips
      FROM analytics_events 
-     WHERE created_at >= ${timeFilter}
+     WHERE created_at >= ${timeFilter} AND (is_bot IS NULL OR is_bot = 0)
      GROUP BY country 
      ORDER BY count DESC 
      LIMIT 5`
   ).all();
 
-  // 3. Query device types
+  // 4. Query human device types
   const deviceResults = await env.DB.prepare(
     `SELECT device_type, COUNT(*) as count 
      FROM analytics_events 
-     WHERE created_at >= ${timeFilter}
+     WHERE created_at >= ${timeFilter} AND (is_bot IS NULL OR is_bot = 0)
      GROUP BY device_type 
      ORDER BY count DESC`
   ).all();
 
   const stats = {
-    events,
-    totalEvents,
+    totalEvents: overview?.total_events || 0,
+    totalPageViews: overview?.total_page_views || 0,
+    humanPageViews: overview?.human_page_views || 0,
+    uniqueHumanIps: overview?.unique_human_ips || 0,
+    botCount: overview?.bot_events || 0,
+    humanEvents,
     countries: countryResults.results || [],
     devices: deviceResults.results || []
   };
@@ -165,7 +187,7 @@ async function sendDailyReport(env, hours = 24) {
 
 export default {
   // Purely private Cron Trigger handler
-  // Only Cloudflare's internal scheduler can invoke this; it cannot be called over the public web
+  // Runs automatically on Cloudflare edge schedule (12:00 AM midnight MYT)
   async scheduled(event, env, ctx) {
     ctx.waitUntil(sendDailyReport(env, 24));
   }

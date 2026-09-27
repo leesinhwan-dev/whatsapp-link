@@ -1,5 +1,5 @@
 // Cloudflare Pages Function: /api/track
-// Ingests anonymous usage events directly into Cloudflare D1
+// Ingests usage events, captures client IP, and detects Real Humans vs. Automated Bots
 
 const ALLOWED_EVENTS = [
   "page_view",
@@ -9,17 +9,38 @@ const ALLOWED_EVENTS = [
   "show_qr"
 ];
 
+// Regex for automated bots, search engine crawlers, and headless tools
+const BOT_UA_REGEX = /bot|spider|crawl|slurp|headless|puppeteer|selenium|lighthouse|curl|wget|python|postman|insomnia|axios|go-http-client|apache-httpclient|okhttp|http_request/i;
+
+// Auto-run schema migration if columns do not exist yet in live D1 database
+let migrationDone = false;
+async function ensureColumnsExist(db) {
+  if (migrationDone) return;
+  try {
+    await db.prepare("ALTER TABLE analytics_events ADD COLUMN ip_address TEXT").run();
+  } catch (e) {}
+  try {
+    await db.prepare("ALTER TABLE analytics_events ADD COLUMN is_bot INTEGER DEFAULT 0").run();
+  } catch (e) {}
+  try {
+    await db.prepare("ALTER TABLE analytics_events ADD COLUMN bot_reason TEXT").run();
+  } catch (e) {}
+  migrationDone = true;
+}
+
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
 
-    // Check if D1 binding exists
     if (!env.DB) {
       return new Response(
-        JSON.stringify({ error: "Database binding 'DB' not configured in Pages settings" }),
+        JSON.stringify({ error: "Database binding 'DB' not configured" }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
+
+    // Ensure database columns are present
+    await ensureColumnsExist(env.DB);
 
     const data = await request.json().catch(() => ({}));
     const eventType = data.event;
@@ -31,12 +52,19 @@ export async function onRequestPost(context) {
       );
     }
 
-    // Extract geo headers automatically provided by Cloudflare's edge network
+    // 1. Capture Client IP address from Cloudflare edge header
+    const ipAddress = (
+      request.headers.get("cf-connecting-ip") ||
+      request.headers.get("x-real-ip") ||
+      "Unknown"
+    ).trim();
+
+    // 2. Extract Geographic Information
     const cf = request.cf || {};
     const country = (cf.country || "XX").slice(0, 5);
     const city = (cf.city || "Unknown").slice(0, 50);
 
-    // Detect device category from User-Agent
+    // 3. User-Agent & Device Detection
     const userAgent = request.headers.get("user-agent") || "";
     let deviceType = "desktop";
     if (/tablet|ipad|playbook|silk/i.test(userAgent)) {
@@ -45,15 +73,34 @@ export async function onRequestPost(context) {
       deviceType = "mobile";
     }
 
-    // Insert into D1 (SQLite at the edge)
+    // 4. Human vs. Bot Detection Logic
+    let isBot = 0;
+    let botReason = "human";
+
+    if (cf.verifiedBot) {
+      // Cloudflare verified automated crawler (Googlebot, Bing, etc.)
+      isBot = 1;
+      botReason = "verified_bot";
+    } else if (!userAgent || BOT_UA_REGEX.test(userAgent)) {
+      // User-Agent matches crawler or scraper
+      isBot = 1;
+      botReason = "crawler_ua";
+    } else if (data.is_webdriver === true) {
+      // Controlled by automated software (Selenium, Puppeteer)
+      isBot = 1;
+      botReason = "webdriver";
+    }
+
+    // Insert into Cloudflare D1
     await env.DB.prepare(
-      `INSERT INTO analytics_events (event_type, country, city, device_type, created_at)
-       VALUES (?, ?, ?, ?, datetime('now'))`
+      `INSERT INTO analytics_events (
+        event_type, country, city, device_type, ip_address, is_bot, bot_reason, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))`
     )
-      .bind(eventType, country, city, deviceType)
+      .bind(eventType, country, city, deviceType, ipAddress, isBot, botReason)
       .run();
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, is_bot: Boolean(isBot) }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",

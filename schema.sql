@@ -6,8 +6,12 @@ CREATE TABLE IF NOT EXISTS analytics_events (
   country TEXT,                      -- e.g. 'MY', 'SG', 'US'
   city TEXT,                         -- e.g. 'Kuala Lumpur', 'Singapore'
   device_type TEXT,                  -- 'mobile', 'desktop', 'tablet'
+  ip_address TEXT,                   -- Client IP address (from CF-Connecting-IP)
+  is_bot INTEGER DEFAULT 0,          -- 0 = Real Human, 1 = Bot / Automated Crawler
+  bot_reason TEXT,                   -- Reason if detected as bot (e.g. 'verified_bot', 'crawler_ua', 'webdriver')
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Index for speedy daily aggregation queries
-CREATE INDEX IF NOT EXISTS idx_events_created_at_type ON analytics_events(created_at, event_type);
+-- Indexes for speedy aggregation queries
+CREATE INDEX IF NOT EXISTS idx_events_created_at_bot ON analytics_events(created_at, is_bot);
+CREATE INDEX IF NOT EXISTS idx_events_ip_created ON analytics_events(ip_address, created_at);
